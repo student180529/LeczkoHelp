@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +20,7 @@ namespace LiniaProdukcyjna
     /// </summary>
     public partial class Linia : Window
     {
+        public static Linia singletonLinia;
         static public bool alarm = false;
         static public int ilosclodow;
         static Timer timer3s = new Timer();
@@ -45,6 +47,9 @@ namespace LiniaProdukcyjna
         static public int ilosc = 0;
         public Linia()
         {
+            if (singletonLinia == null) singletonLinia = this;
+            else return;
+
             InitializeComponent();
             licznik2s = 0;
             licznik3s = 0;
@@ -168,12 +173,14 @@ namespace LiniaProdukcyjna
                     obrot = true;
                     if (ilosckubkow > 5) {
                         ilosc++;
-                        //Thread thread = new Thread(WypiszIlosc);
+                        WypiszIlosc(singletonLinia.gotowe);
+                        //Thread thread = new Thread(WypiszIlosc());
                         //thread.Start();
-                        /*gotowe.Dispatcher.Invoke(() => {
-                            gotowe.Text = ilosc.ToString() + " sztuk";
-                            //WypiszIlosc();//!!!!!!!!!!!!!!
-                        });*/
+                        //Linia.singletonLinia.gotowe.Dispatcher.Invoke(() =>
+                        //{
+                        //    gotowe.Text = ilosc.ToString() + " sztuk";
+                        //    WypiszIlosc(gotowe);
+                        //});
                     }
                 }
                 //kolo
@@ -333,8 +340,8 @@ namespace LiniaProdukcyjna
             Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFDBCA79");
         }
 
-        private void WypiszIlosc() {
-            gotowe.Text = ilosc.ToString() + " sztuk";
+        private static void WypiszIlosc(TextBox textBox) {
+            textBox.Text = ilosc.ToString() + " sztuk";
         }
     }
 }
