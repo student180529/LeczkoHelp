@@ -47,7 +47,8 @@ namespace LiniaProdukcyjna
         static public int ilosc = 0;
         public Linia()
         {
-            if (singletonLinia != null) singletonLinia = this;
+            if (singletonLinia == null) singletonLinia = this;
+            else return;
 
             InitializeComponent();
             licznik2s = 0;
